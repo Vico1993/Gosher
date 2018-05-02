@@ -47,6 +47,7 @@ func main() {
 	tmpl.Reload(true)
 
 	app.RegisterView(tmpl)
+	app.StaticWeb("/templates", "./templates")
 
 	app.Get("/", func(ctx iris.Context) {
 		fmt.Println("New Connection")

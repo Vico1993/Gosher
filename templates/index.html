@@ -20,31 +20,47 @@
                 <div class="col-xs-12 col-lg-12">
                     <div class="messages list-group">
                         {{#each messages}}
-                            <a id="message-{{ID}}" href="#" class="list-group-item">
+                            <a id="message-{{id}}" href="#" class="list-group-item">
                                 <strong>{{message}}</strong>
                             </a>
                         {{/each}}
                     </div>
                 </div>
             </div>
+
+            <div class="input-group mb-3">
+                <input type="text" id="input-message" class="form-control" placeholder="Your message" aria-label="Your message" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" id="add-message" type="button">Add Message</button>
+                </div>
+              </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
     <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <script src="./config.js"></script>
-    <script>
-        
-        var pusher = new Pusher(appConfig.pusherKey, {
+    <script type="module">
+
+import {PusherKey} from '/templates/config.js'; 
+
+        console.log( PusherKey() )
+
+        var pusher = new Pusher(PusherKey(), {
             cluster: 'us2',
             encrypted: true
         });
 
-        // var channel = pusher.subscribe('get_message');
+        var channel = pusher.subscribe('message');
         
-        // channel.bind('get_message', function(data) {
-        //     alert("TOTO");
-        // });
+        channel.bind('get_message', function(data) {
+            alert("TOTO");
+        });
+
+        var button = document.getElementById('add-message');
+        button.addEventListener('click', function() {
+            var message = document.getElementById('input-message').value;
+        }, false);
+
     </script>
 </body>
 </html>
