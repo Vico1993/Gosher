@@ -1,0 +1,7 @@
+{
+    "pusherAppId" : 12345,
+    "pusherKey" : "pusher-key",
+    "pusherSecret" : "pusher-secret",
+    "pusherCluster" : "us2",
+    "Secure" : true
+}

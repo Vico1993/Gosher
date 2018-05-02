@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message in real Time with Golang</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.3/css/bootstrap.min.css" />
+</head>
+<body>
+    <div>
+        <nav class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="http://127.0.0.1:8080/">
+                        Message in Real Time
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-lg-12">
+                    <div class="messages list-group">
+                        {{#each messages}}
+                            <a id="message-{{ID}}" href="#" class="list-group-item">
+                                <strong>{{message}}</strong>
+                            </a>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <script src="./config.js"></script>
+    <script>
+        
+        var pusher = new Pusher(appConfig.pusherKey, {
+            cluster: 'us2',
+            encrypted: true
+        });
+
+        // var channel = pusher.subscribe('get_message');
+        
+        // channel.bind('get_message', function(data) {
+        //     alert("TOTO");
+        // });
+    </script>
+</body>
+</html>
