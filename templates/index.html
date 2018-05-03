@@ -18,7 +18,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-lg-12">
-                    <div class="messages list-group">
+                    <div id="messages" class="list-group">
                         {{#each messages}}
                             <a id="message-{{id}}" href="#" class="list-group-item">
                                 <strong>{{message}}</strong>
@@ -43,23 +43,44 @@
 
 import {PusherKey} from '/templates/config.js'; 
 
-        console.log( PusherKey() )
-
         var pusher = new Pusher(PusherKey(), {
             cluster: 'us2',
             encrypted: true
         });
 
-        var channel = pusher.subscribe('message');
-        
-        channel.bind('get_message', function(data) {
-            alert("TOTO");
-        });
+        console.log( PusherKey() )
+
+        var channel = pusher.subscribe('message');   
 
         var button = document.getElementById('add-message');
         button.addEventListener('click', function() {
-            var message = document.getElementById('input-message').value;
+            var newComment = {
+                "id": 9,
+                "body": document.getElementById('input-message').value
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost:8080/message", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState != 4 || xhr.status != 200) return;
+                // document.getElementById('input-message').;
+            };
+            xhr.send(JSON.stringify(newComment));
         }, false);
+
+
+        channel.bind('new_message', function(data) {
+            var list = document.getElementById('messages');
+            var message = '<strong>'+data.message+'</strong>';
+
+            var newMessageNode = document.createElement('a');
+            newMessageNode.classList.add('list-group-item');
+            newMessageNode.setAttribute('id', 'message-'+data.id);
+            newMessageNode.innerHTML = message;
+
+            list.appendChild(newMessageNode);
+        });
 
     </script>
 </body>

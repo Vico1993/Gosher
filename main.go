@@ -4,8 +4,14 @@ import (
 	"fmt"
 
 	"github.com/kataras/iris"
+	pusher "github.com/pusher/pusher-http-go"
 	"github.com/spf13/viper"
 )
+
+type message struct {
+	id   string `json:"id"`
+	body string `json:"body"`
+}
 
 func main() {
 
@@ -33,13 +39,17 @@ func main() {
 		panic(fmt.Errorf("Fatal error config file: %s", err))
 	}
 
-	// client := pusher.Client{
-	// 	AppId:   viper.GetString("pusherAppId"),
-	// 	Key:     viper.GetString("pusherKey"),
-	// 	Secret:  viper.GetString("pusherSecret"),
-	// 	Cluster: "us2",
-	// 	Secure:  true,
-	// }
+	fmt.Println(viper.GetString("pusherAppId"))
+	fmt.Println(viper.GetString("pusherKey"))
+	fmt.Println(viper.GetString("pusherSecret"))
+
+	client := pusher.Client{
+		AppId:   viper.GetString("pusherAppId"),
+		Key:     viper.GetString("pusherKey"),
+		Secret:  viper.GetString("pusherSecret"),
+		Cluster: "us2",
+		Secure:  true,
+	}
 
 	app := iris.New()
 
@@ -54,6 +64,26 @@ func main() {
 
 		ctx.ViewData("messages", messages)
 		ctx.View("index.html")
+	})
+
+	app.Post("/message", func(ctx iris.Context) {
+		mess := message{}
+		err := ctx.ReadJSON(mess)
+		if err != nil {
+			ctx.StatusCode(iris.StatusInternalServerError)
+			ctx.WriteString(err.Error())
+		}
+
+		fmt.Println("New Post data")
+		newMessage := map[string]string{
+			"id":      mess.id,
+			"message": mess.body,
+		}
+		messages = append(messages, newMessage)
+
+		ctx.ViewData("messages", messages)
+
+		client.Trigger("message", "new_message", newMessage)
 	})
 
 	app.Run(iris.Addr("127.0.0.1:8080"))
