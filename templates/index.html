@@ -64,8 +64,10 @@ import {PusherKey} from '/templates/config.js';
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState != 4 || xhr.status != 200) return;
-                // document.getElementById('input-message').;
+                document.getElementById('input-message').value = "";
             };
+
+            console.log( JSON.stringify(newComment) );
             xhr.send(JSON.stringify(newComment));
         }, false);
 
@@ -77,6 +79,7 @@ import {PusherKey} from '/templates/config.js';
             var newMessageNode = document.createElement('a');
             newMessageNode.classList.add('list-group-item');
             newMessageNode.setAttribute('id', 'message-'+data.id);
+            newMessageNode.setAttribute('href', '#');
             newMessageNode.innerHTML = message;
 
             list.appendChild(newMessageNode);
